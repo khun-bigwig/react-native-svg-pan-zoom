@@ -25,7 +25,7 @@ export default class SvgPanZoom extends Component {
                 });
             });
         };
-        this.zoomToPoint = (x, y, scale, duration = 700) => {
+        this.zoomToPoint = (x, y, scale, duration = 700, callback) => {
             const { viewDimensions } = this.state;
             const { canvasHeight, canvasWidth } = this.props;
             const zoomPoint = {
@@ -59,7 +59,11 @@ export default class SvgPanZoom extends Component {
                     duration,
                     useNativeDriver: true
                 })
-            ]).start();
+            ]).start(({ finished }) => {
+                if (finished) {
+                    callback && callback()
+                }
+            });
             this.setState({
                 viewTransform: viewTransform
             });
